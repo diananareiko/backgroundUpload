@@ -1,18 +1,13 @@
-//
-//  BackgraundUploadApp.swift
-//  BackgraundUpload
-//
-//  Created by Nareyko, Diana on 30.11.24.
-//
-
 import SwiftUI
 import SwiftData
 
 @main
 struct BackgraundUploadApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            PhotoItem.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -25,7 +20,7 @@ struct BackgraundUploadApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            CoordinatorView()
         }
         .modelContainer(sharedModelContainer)
     }
