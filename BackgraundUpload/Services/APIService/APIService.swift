@@ -3,6 +3,7 @@ import Foundation
 
 protocol APIServiceProtocol {
 
+    var backgroundCompletionHandler: (() -> Void)? { get set }
     func upload<T: Decodable>(target: TargetType, uid: UUID, from file: URL) -> AnyPublisher<T, APIServiceError>
 }
 
@@ -10,6 +11,7 @@ class APIService: NSObject, APIServiceProtocol, URLSessionDelegate, URLSessionTa
     private var urlSession: URLSession!
     private var taskToResultMap: [URLSessionTask: PassthroughSubject<Data, APIServiceError>] = [:]
     private var taskToResponseDataMap: [URLSessionTask: Data] = [:] // For storing received response data
+    var backgroundCompletionHandler: (() -> Void)?
 
     override init() {
         super.init()
@@ -95,5 +97,7 @@ class APIService: NSObject, APIServiceProtocol, URLSessionDelegate, URLSessionTa
     
     func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
         print("Background tasks finished")
+        backgroundCompletionHandler?()
+        backgroundCompletionHandler = nil
     }
 }
